@@ -1,15 +1,23 @@
 # zabbix-config
+
 Repository for zabbix configuration file and deployment tools.
 
-## How to run the playbook
+## How to use this role
 
+Clone this role into your `roles/` directory:
 
-0. Create a host group called [zabbix-hosts] in your ansible hosts file at `/etc/ansible/hosts` and put
-the list of hosts (or host groups) you want to run this playbook against.
+    git clone https://github.com/CCI-MOC/zabbix-config roles/zabbix-config
 
-1. Run `ansible-playbook install_agent.yaml -u username` to deploy zabbix agent in passive mode (default, preffered).
+Add this role to a playbook. You will need to set `become: true`:
 
-2. You can specify `--extra-vars "agent_type=active"` to deploy an active zabbix agent, useful when the hosts are behind a NAT.
+    - hosts: zabbix-hosts
+      become: true
+      roles:
+        - zabbix-config
 
-3. If you choose active agent, make sure to put the preshared at `/etc/zabbix/zabbix_agentd.psk`and make it accesible to zabbix user.
+## Configuration
 
+- `zabbix_release_url`
+- `zabbix_agent_type`
+- `zabbix_server`
+- `zabbix_tls_psk_identity`

@@ -1,0 +1,30 @@
+---
+- name: Configure zabbix repository for x86_64
+  yum:
+    name: "{{ zabbix_release_url }}"
+  when: ansible_architecture == "x86_64"
+
+- name: Configure zabbix repository for ppc64le
+  get_url:
+    url: "{{ zabbix_moc_repo_url }}"
+    dest: /etc/yum.repos.d/ppc64le-zabbix-4.repo
+  when: ansible_architecture == "ppc64le"
+
+- name: Install zabbix agent
+  yum:
+    name: zabbix-agent
+    state: latest
+    update_cache: true
+
+- name: Install zabbix agent configuration
+  template:
+    src: zabbix_agentd.j2.conf
+    dest: /etc/zabbix/zabbix_agentd.conf
+  notify:
+    - Restart Zabbix
+
+- name: Start and enable zabbix agent
+  service:
+    name: zabbix-agent
+    state: started
+    enabled: true
